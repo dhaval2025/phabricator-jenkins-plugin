@@ -58,7 +58,8 @@ public class PhabricatorNotifierTest extends BuildIntegrationTest {
                 true,
                 true,
                 ".phabricator-lint",
-                "10000"
+                "10000",
+                true
         );
     }
 
@@ -280,7 +281,8 @@ public class PhabricatorNotifierTest extends BuildIntegrationTest {
                 true,
                 true,
                 ".phabricator-lint",
-                "10000"
+                "10000",
+                true
         );
         testPostCoverage();
     }
@@ -322,7 +324,8 @@ public class PhabricatorNotifierTest extends BuildIntegrationTest {
             true,
             true,
             ".phabricator-lint",
-            "10000"
+            "10000",
+            true
         );
     }
 }

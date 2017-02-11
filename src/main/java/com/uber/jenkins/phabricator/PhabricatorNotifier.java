@@ -78,14 +78,14 @@ public class PhabricatorNotifier extends Notifier {
     private final String lintFileSize;
     private final double coverageThreshold;
     private UberallsClient uberallsClient;
-
+    private final boolean allowRunTimeNotificationsOverride;
     // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
     @DataBoundConstructor
     public PhabricatorNotifier(boolean commentOnSuccess, boolean uberallsEnabled, boolean coverageCheck,
                                double coverageThreshold,
                                boolean preserveFormatting, String commentFile, String commentSize,
                                boolean commentWithConsoleLinkOnFailure, boolean customComment, boolean processLint,
-                               String lintFile, String lintFileSize) {
+                               String lintFile, String lintFileSize, boolean allowRunTimeNotificationsOverride) {
         this.commentOnSuccess = commentOnSuccess;
         this.uberallsEnabled = uberallsEnabled;
         this.coverageCheck = coverageCheck;
@@ -98,6 +98,7 @@ public class PhabricatorNotifier extends Notifier {
         this.customComment = customComment;
         this.processLint = processLint;
         this.coverageThreshold = coverageThreshold;
+        this.allowRunTimeNotificationsOverride = allowRunTimeNotificationsOverride;
     }
 
     public BuildStepMonitor getRequiredMonitorService() {
@@ -109,6 +110,20 @@ public class PhabricatorNotifier extends Notifier {
                                  final BuildListener listener) throws InterruptedException, IOException {
         EnvVars environment = build.getEnvironment(listener);
         Logger logger = new Logger(listener.getLogger());
+
+        // check if we can disable the notifications.
+        boolean disableNotifactions = false;
+        if (environment.get(PhabricatorPlugin.DISABLE_ALL_NOTIFACTIONS) != null) {
+          try {
+            disableNotifactions = Boolean.parseBoolean(environment.get(PhabricatorPlugin.DISABLE_ALL_NOTIFACTIONS));
+          } catch (Exception e) {
+            logger.getStream().println(("error parsing the DISABLE_ALL_NOTIFACTIONS param, will be set to false"));
+          }
+        }
+        // check if we need to disable and return true
+        if (allowRunTimeNotificationsOverride && disableNotifactions) {
+          return true;
+        }
 
         final String branch = environment.get("GIT_BRANCH");
         final String gitUrl = environment.get("GIT_URL");

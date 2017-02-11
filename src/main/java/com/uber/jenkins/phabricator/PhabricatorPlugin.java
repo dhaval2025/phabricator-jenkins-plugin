@@ -33,6 +33,11 @@ public class PhabricatorPlugin extends Plugin {
     public static final String PHID_FIELD = "PHID";
     // Revision ID (to abort old running jobs)
     public static final String ABORT_ON_REVISION_ID_FIELD = "ABORT_ON_REVISION_ID";
+    /**
+     * Disable all notifactions back to fab run time using this param
+     * by default this value is true
+     */
+    public static final String DISABLE_ALL_NOTIFACTIONS = "DISABLE_ALL_NOTIFACTIONS";
 
     public static String getIconPath(String icon) {
         if (icon == null) {

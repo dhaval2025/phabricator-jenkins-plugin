@@ -53,4 +53,8 @@
       <f:textbox default="100000" />
     </f:entry>
   </f:optionalBlock>
+  <f:entry title="Allow runtime override to disable all notifactions to Phab." field="allowRunTimeNotificationsOverride"
+           description="Post a differential comment on successful builds">
+    <f:checkbox default="true" />
+  </f:entry>
 </j:jelly>
